@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Service Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">VS</div>
+        <div>
+          <h1>Vehicle Service Management System</h1>
+          <p>Track service records with a simple frontend app</p>
+        </div>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#add-vehicle">Add Vehicle</a>
+        <a href="#service-list">Service List</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Frontend Only</span>
+        <h2>Manage vehicle service records in a clean and practical dashboard.</h2>
+        <p>
+          Add new vehicles, update service status, search records instantly, and keep your data saved in local storage.
+        </p>
+        <div class="hero-actions">
+          <a href="#add-vehicle" class="btn btn-primary">Add Vehicle</a>
+          <a href="#service-list" class="btn btn-secondary">View Records</a>
+        </div>
+      </div>
+
+      <div class="hero-cards">
+        <article class="mini-card">
+          <strong>Easy Tracking</strong>
+          <p>Store owner, vehicle, and problem details in one place.</p>
+        </article>
+        <article class="mini-card">
+          <strong>Fast Updates</strong>
+          <p>Edit records in a popup and mark services completed anytime.</p>
+        </article>
+      </div>
+    </section>
+
+    <main>
+      <div id="toast" class="toast"></div>
+
+      <section id="dashboard" class="section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Overview</span>
+            <h3>Dashboard</h3>
+          </div>
+          <p>Quick summary of all service records.</p>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card stat-blue">
+            <div class="stat-badge">TV</div>
+            <div>
+              <span>Total Vehicles</span>
+              <h4 id="totalVehicles">0</h4>
+            </div>
+          </article>
+
+          <article class="stat-card stat-orange">
+            <div class="stat-badge">SD</div>
+            <div>
+              <span>Services Due</span>
+              <h4 id="servicesDue">0</h4>
+            </div>
+          </article>
+
+          <article class="stat-card stat-green">
+            <div class="stat-badge">CS</div>
+            <div>
+              <span>Completed Services</span>
+              <h4 id="completedServices">0</h4>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="add-vehicle" class="section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Create Record</span>
+            <h3>Add Vehicle</h3>
+          </div>
+          <p>Enter service information below.</p>
+        </div>
+
+        <div class="panel">
+          <form id="vehicleForm" class="vehicle-form">
+            <div class="grid-two">
+              <div class="field">
+                <label for="ownerName">Owner Name</label>
+                <input type="text" id="ownerName" placeholder="Enter owner name" required>
+              </div>
+
+              <div class="field">
+                <label for="vehicleNumber">Vehicle Number</label>
+                <input type="text" id="vehicleNumber" placeholder="Enter vehicle number" required>
+              </div>
+
+              <div class="field">
+                <label for="vehicleType">Vehicle Type</label>
+                <select id="vehicleType" required>
+                  <option value="">Select vehicle type</option>
+                  <option value="Car">Car</option>
+                  <option value="Bike">Bike</option>
+                  <option value="Truck">Truck</option>
+                  <option value="Bus">Bus</option>
+                  <option value="Van">Van</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="serviceDate">Service Date</label>
+                <input type="date" id="serviceDate" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="problemDescription">Problem Description</label>
+              <textarea id="problemDescription" rows="4" placeholder="Describe the service problem" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary form-btn">Add Vehicle</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="service-list" class="section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Records</span>
+            <h3>Service List</h3>
+          </div>
+          <p>Search, filter, edit, delete, and update service status.</p>
+        </div>
+
+        <div class="panel">
+          <div class="toolbar">
+            <input type="text" id="searchInput" placeholder="Search by owner name or vehicle number">
+            <select id="statusFilter">
+              <option value="all">All Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Owner</th>
+                  <th>Vehicle Number</th>
+                  <th>Type</th>
+                  <th>Service Date</th>
+                  <th>Problem</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="vehicleTableBody">
+                <tr>
+                  <td colspan="7" class="empty-row">No vehicle records available.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="editModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h3>Edit Vehicle Details</h3>
+          <p>Update the selected record and save it.</p>
+        </div>
+        <button type="button" class="modal-close" id="closeModal">X</button>
+      </div>
+
+      <form id="editVehicleForm" class="vehicle-form">
+        <input type="hidden" id="editVehicleId">
+
+        <div class="grid-two">
+          <div class="field">
+            <label for="editOwnerName">Owner Name</label>
+            <input type="text" id="editOwnerName" required>
+          </div>
+
+          <div class="field">
+            <label for="editVehicleNumber">Vehicle Number</label>
+            <input type="text" id="editVehicleNumber" required>
+          </div>
+
+          <div class="field">
+            <label for="editVehicleType">Vehicle Type</label>
+            <select id="editVehicleType" required>
+              <option value="Car">Car</option>
+              <option value="Bike">Bike</option>
+              <option value="Truck">Truck</option>
+              <option value="Bus">Bus</option>
+              <option value="Van">Van</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="editServiceDate">Service Date</label>
+            <input type="date" id="editServiceDate" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="editProblemDescription">Problem Description</label>
+          <textarea id="editProblemDescription" rows="4" required></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelEdit">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Vehicle</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
